@@ -11,10 +11,7 @@ import random as rd
 import numpy as np
 import tensorflow as tf
 
-# Parameters of neural net
-learning_rate = 0.05  # learning rate of optimizer
-epochs = 1            # number of times the training data is presented to the net
-batch_size = 512      # Number of examples per batch
+# Display option
 display_step = 1      # Display cost after each epoch
 
 # Function for normalization of inputs to a range of 0-1
@@ -57,6 +54,12 @@ n_classes = n_col_y
 x = tf.placeholder("float", [None, n_input])
 y = tf.placeholder("float", [None, n_classes])
 
+# Parameters of neural net
+pars = {
+    'learning_rate': 0.05,  # learning rate of optimizer
+    'epochs': 1,            # number of times the training data is presented to the net
+    'batch_size': 512       # Number of examples per batch
+}
 # Neurons in hidden and output layers
 neurons = {
     'h1': 512,
@@ -96,7 +99,7 @@ pred = multilayer_perceptron(x, weights, biases)
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
 
 # Adam optimizer (gradient descent fails somehow)
-optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
+optimizer = tf.train.AdamOptimizer(pars['learning_rate']).minimize(cost)
 
 # Initializing the variables
 init = tf.initialize_all_variables()
@@ -106,19 +109,21 @@ with tf.Session() as sess:
     # Initialize all variables
     sess.run(init)
     # Loop epochs
-    for epoch in range(epochs):
+    for epoch in range(pars['epochs']):
+        # Reset cost
         avg_cost = 0.
-        total_batch = int(n_row_train/batch_size)
+        # Number of batches
+        n_batch = int(n_row_train/pars['batch_size'])
         # Loop batches
         for i in range(total_batch):
             # Random sample of training rows
-            rows = rd.sample(range(len(x_train)), batch_size)
+            rows = rd.sample(range(len(x_train)), pars['batch_size'])
             batch_x = x_train.ix[rows, :].dropna()
             batch_y = y_train.ix[rows, :].dropna()
             # Fit training using batch data
             sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
             # Compute average loss
-            avg_cost += sess.run(cost, feed_dict={x: batch_x, y: batch_y}) / total_batch
+            avg_cost += sess.run(cost, feed_dict={x: batch_x, y: batch_y}) / n_batch
         # Display logs per epoch step
         if epoch % display_step == 0:
             print("Epoch:", '%03d' % (epoch+1), "cost =", "{:.9f}".format(avg_cost))
