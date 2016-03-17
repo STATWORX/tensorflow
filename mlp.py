@@ -11,8 +11,8 @@ import random as rd
 import numpy as np
 import tensorflow as tf
 
-# Display option
-display_step = 1      # Display cost after each epoch
+# Display cost after each epoch
+display_step = 1
 
 # Function for normalization of inputs to a range of 0-1
 def norm(x):
@@ -23,7 +23,7 @@ data = pd.read_csv("data/train.csv")
 data = data.dropna(how = 'any') # remove NaN
 
 # Store target
-y_data = data['target']             # get column
+y_data = data['target']             # Target column
 y_data = y_data.astype('category')  # Convert y to numeric
 y_data = y_data.cat.codes           #  category codes
 y_data = pd.get_dummies(y_data)     # make 1-hot coding
@@ -57,7 +57,7 @@ y = tf.placeholder("float", [None, n_classes])
 # Parameters of neural net
 pars = {
     'learning_rate': 0.05,  # learning rate of optimizer
-    'epochs': 1,            # number of times the training data is presented to the net
+    'epochs': 5,            # number of times the training data is presented to the net
     'batch_size': 512       # Number of examples per batch
 }
 # Neurons in hidden and output layers
@@ -115,7 +115,7 @@ with tf.Session() as sess:
         # Number of batches
         n_batch = int(n_row_train/pars['batch_size'])
         # Loop batches
-        for i in range(total_batch):
+        for i in range(n_batch):
             # Random sample of training rows
             rows = rd.sample(range(len(x_train)), pars['batch_size'])
             batch_x = x_train.ix[rows, :].dropna()
