@@ -69,16 +69,16 @@ neurons = {
 }
 # Store layers weight & bias in dictionary
 weights = {
-    'h1': tf.Variable(tf.random_normal([n_input, neurons['h1']])),
-    'h2': tf.Variable(tf.random_normal([neurons['h1'], neurons['h2']])),
-    'h3': tf.Variable(tf.random_normal([neurons['h2'], neurons['h3']])),
-    'out': tf.Variable(tf.random_normal([neurons['h3'], neurons['out']]))
+    'h1': tf.Variable(tf.random_normal(shape = [n_input, neurons['h1']])),
+    'h2': tf.Variable(tf.random_normal(shape = [neurons['h1'], neurons['h2']])),
+    'h3': tf.Variable(tf.random_normal(shape = [neurons['h2'], neurons['h3']])),
+    'out': tf.Variable(tf.random_normal(shape = [neurons['h3'], neurons['out']]))
 }
 biases = {
-    'b1': tf.Variable(tf.random_normal([neurons['h1']])),
-    'b2': tf.Variable(tf.random_normal([neurons['h2']])),
-    'b3': tf.Variable(tf.random_normal([neurons['h3']])),
-    'out': tf.Variable(tf.random_normal([neurons['out']]))
+    'b1': tf.Variable(tf.random_normal(shape = [neurons['h1']])),
+    'b2': tf.Variable(tf.random_normal(shape = [neurons['h2']])),
+    'b3': tf.Variable(tf.random_normal(shape = [neurons['h3']])),
+    'out': tf.Variable(tf.random_normal(shape = [neurons['out']]))
 }
 
 # Create model
